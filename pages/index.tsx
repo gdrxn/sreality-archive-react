@@ -1,10 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
+import { useState } from "react";
 
 import Navbar from "../components/Navbar";
+import RealEstateCard from "../components/RealEstateCard";
 
 const Home: NextPage = () => {
+	const [sortType, setsortType] = useState("date-desc");
+
 	return (
 		<div className="flex min-h-screen flex-col">
 			<Head>
@@ -14,12 +17,28 @@ const Home: NextPage = () => {
 
 			<Navbar />
 
-			<main>
-				<select name="">
-					<option value=""></option>
+			<main className="flex flex-col">
+				<select
+					className="self-end focus:outline-none text-lg px-2 py-1.5 rounded-lg shadow-md border border-gray-100 mt-6 mr-4"
+					value={sortType}
+					onChange={(e) => setsortType(e.target.value)}
+				>
+					<option value="date-desc">Date descending</option>
+					<option value="date-asc">Date ascending</option>
+					<option value="date-desc">Date descending</option>
+					<option value="price-asc">Price ascending</option>
+					<option value="price-desc">Price descending</option>
 				</select>
 
-				<section>{/* cards */}</section>
+				<section className="mt-10 px-5">
+					<ul className="grid grid-cols-3 gap-5">
+						<RealEstateCard />
+						<RealEstateCard />
+						<RealEstateCard />
+						<RealEstateCard />
+						<RealEstateCard />
+					</ul>
+				</section>
 			</main>
 		</div>
 	);

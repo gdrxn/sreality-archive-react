@@ -5,9 +5,9 @@ const RealEstateCard = (props: Props) => {
 	return (
 		<li>
 			<div>
-				<h2></h2>
-				<h3></h3>
-				<h4></h4>
+				<h2>Pozemek xxx</h2>
+				<h3>Chodov, Praha</h3>
+				<h4>Cena: 5 kč</h4>
 			</div>
 		</li>
 	);
