@@ -2,7 +2,6 @@ import axios, { type AxiosResponse, AxiosError } from "axios";
 import type { IErrorResponse } from "./types";
 
 const axiosInstance = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_SERVER_URI,
 	withCredentials: true,
 });
 

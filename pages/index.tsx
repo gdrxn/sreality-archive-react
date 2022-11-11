@@ -1,12 +1,26 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { IGetProductsResponse, IRealEstate } from "../types";
+import axios, { AxiosError } from "axios";
 
 import Navbar from "../components/Navbar";
 import RealEstateCard from "../components/RealEstateCard";
 
 const Home: NextPage = () => {
 	const [sortType, setsortType] = useState("date-desc");
+	const [products, setProducts] = useState([] as IRealEstate[]);
+
+	useEffect(() => {
+		axios
+			.get<IGetProductsResponse>(`/api/products`)
+			.then((res) => {
+				setProducts(res.data.currentProducts);
+			})
+			.catch((err: AxiosError) => {
+				console.log(err);
+			});
+	}, []);
 
 	return (
 		<div className="flex min-h-screen flex-col">
@@ -32,11 +46,9 @@ const Home: NextPage = () => {
 
 				<section className="mt-10 px-5">
 					<ul className="grid grid-cols-3 gap-5">
-						<RealEstateCard />
-						<RealEstateCard />
-						<RealEstateCard />
-						<RealEstateCard />
-						<RealEstateCard />
+						{products.map((product) => (
+							<RealEstateCard key={product._id} product={product} />
+						))}
 					</ul>
 				</section>
 			</main>

@@ -13,15 +13,27 @@ export interface IRealEstate {
 	type: HouseOrApartment;
 }
 
-export interface ISearchRequest {
-	page: number;
-	limit: number;
-	searchTerm: string;
+export interface IGetProductsRequest {
+	page?: number;
+	limit?: number;
+	term?: string;
+	min?: number;
+	max?: number;
+	type?: HouseOrApartment;
+	sort?: string;
 }
 
 export interface IGetProductsRequest {
-	page: number;
-	limit: number;
+	page?: number;
+	limit?: number;
+	term?: string;
+	min?: number;
+	max?: number;
+	type?: HouseOrApartment;
+}
+
+export interface IGetProductRequest {
+	id?: string;
 }
 
 export interface IGetProductsResponse {
@@ -35,30 +47,21 @@ export interface IErrorResponse {
 }
 
 export interface IGetProductResponse {
-	result: IRealEstate;
+	result: IRealEstate | null;
 }
 
-export interface ILoginRequest {
+export interface IErrorResponse {
+	code: string;
+	message: string;
+	type?: string;
+}
+
+export interface IUser {
 	email: string;
-	password: string;
-}
-
-export interface IResponse {
-	success: boolean;
-}
-
-export interface IRegisterRequest {
-	email: string;
-	password: string;
-	confirmPassword: string;
+	hash: string;
 	firstName: string;
 	lastName: string;
-}
-
-export interface ISessionUser {
-	email: string;
-	firstName: string;
-	lastName: string;
+	notifications: INotifications[];
 }
 
 export interface INotifications {
@@ -71,4 +74,27 @@ export interface INotifications {
 
 export interface IGetNotificationsResponse {
 	notifications: INotifications[];
+}
+
+export interface IRegisterRequest {
+	email: string;
+	password: string;
+	confirmPassword: string;
+	firstName: string;
+	lastName: string;
+}
+
+export interface ILoginRequest {
+	email: string;
+	password: string;
+}
+
+export interface IResponse {
+	success: boolean;
+}
+
+export interface ISessionUser {
+	email: string;
+	firstName: string;
+	lastName: string;
 }
