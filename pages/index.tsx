@@ -4,26 +4,37 @@ import { useState, useEffect } from "react";
 import { IGetProductsResponse, IRealEstate } from "../types";
 import axios, { AxiosError } from "axios";
 
+import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import RealEstateCard from "../components/RealEstateCard";
 
 const Home: NextPage = () => {
 	const [sortType, setsortType] = useState("date-desc");
 	const [products, setProducts] = useState([] as IRealEstate[]);
+	const productsLength = useRef(0);
+	const pageNumber = useRef(1);
 
-	useEffect(() => {
+	function fetchProduct() {
 		axios
-			.get<IGetProductsResponse>(`/api/products`)
+			.get<IGetProductsResponse>(
+				`/api/products?limit=12&page=${pageNumber.current}`
+			)
 			.then((res) => {
-				setProducts(res.data.currentProducts);
+				setProducts([...products, ...res.data.currentProducts]);
+				productsLength.current = res.data.productsLength;
+				pageNumber.current++;
 			})
 			.catch((err: AxiosError) => {
 				console.log(err);
 			});
+	}
+
+	useEffect(() => {
+		fetchProduct();
 	}, []);
 
 	return (
-		<div className="flex mx-auto min-h-screen max-w-[96rem] flex-col">
+		<div className="flex flex-col">
 			<Head>
 				<title>Create Next App</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -44,13 +55,11 @@ const Home: NextPage = () => {
 					<option value="price-desc">Price descending</option>
 				</select>
 
-				<section className="mt-10 px-5">
-					<ul className="grid grid-cols-3 gap-5">
-						{products.map((product) => (
-							<RealEstateCard key={product._id} product={product} />
-						))}
-					</ul>
-				</section>
+				<ul className="mt-9 mb-9 mx-auto flex flex-wrap gap-5 justify-center">
+					{products.map((product) => (
+						<RealEstateCard key={product._id} product={product} />
+					))}
+				</ul>
 			</main>
 		</div>
 	);

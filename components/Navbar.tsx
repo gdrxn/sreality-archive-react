@@ -5,14 +5,17 @@ import HomeIcon from "../public/icons/home.svg";
 
 const Navbar = () => {
 	return (
-		<header className="flex bg-gray-100/80 h-14 items-center justify-between">
+		<header className="flex bg-gray-100/80 h-12 items-center justify-between">
 			{/* Logo */}
 			<h1 className="text-xl font-medium italic ml-3">Sreality Archive</h1>
 
 			{/* Search */}
 			<div className="flex items-center bg-white rounded-xl px-2 space-x-1.5">
 				<SearchIcon className="w-6 h-6" />
-				<input type="text" className="w-72 py-2 focus:outline-none" />
+				<input
+					type="text"
+					className="sm:w-[15rem] md:w-[20rem] lg:w-[30rem] h-9 focus:outline-none"
+				/>
 			</div>
 
 			{/* Navigation */}
