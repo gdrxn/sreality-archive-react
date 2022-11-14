@@ -10,7 +10,7 @@ const Navbar = () => {
 			<h1 className="text-xl font-medium italic ml-3">Sreality Archive</h1>
 
 			{/* Search */}
-			<div className="flex items-center bg-white rounded-xl px-2 space-x-1.5">
+			<div className="hidden sm:flex items-center bg-white rounded-xl px-2 space-x-1.5">
 				<SearchIcon className="w-6 h-6" />
 				<input
 					type="text"
