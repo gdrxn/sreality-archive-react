@@ -21,7 +21,7 @@ export default async function handler(
 			const getProductsRequest: IGetProductsRequest = req.query;
 
 			const page = getProductsRequest.page || 1;
-			const limit = getProductsRequest.limit || 9;
+			const limit = getProductsRequest.limit || 12;
 			const searchTerm = getProductsRequest.term;
 			const priceMin = getProductsRequest.min || 0;
 			const priceMax = getProductsRequest.max || Infinity;

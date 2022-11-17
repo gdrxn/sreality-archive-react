@@ -1,42 +1,62 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, ChangeEvent } from "react";
-import { IGetProductsResponse } from "../types";
+import { IGetProductsResponse, IRealEstate } from "../types";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 
 import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import RealEstateCard from "../components/RealEstateCard";
 import Loader from "../components/Loader";
 
-export async function getServerSideProps() {
-	const res = await axios.get<IGetProductsResponse>(
-		`http://localhost:5173/api/products?limit=12&page=1`
-	);
-
-	// Pass data to the page via props
-	return { props: { data: res.data } };
-}
-
-type Props = {
-	data: IGetProductsResponse;
-};
-
-const Home: NextPage<Props> = ({ data }) => {
+const Home: NextPage = () => {
 	const router = useRouter();
 
-	const [sortType, setsortType] = useState("date-desc");
-	const [products, setProducts] = useState(data.currentProducts);
-	const productsLength = useRef(data.productsLength);
+	const [sortType, setsortType] = useState(router.query.sort || "date-desc");
+	const [products, setProducts] = useState([] as IRealEstate[]);
+	const productsLength = useRef(0);
 
-	const pageNumber = useRef(2);
-	const [loading, setLoading] = useState(false);
+	const limit = useRef(router.query.limit || 12);
+	const pageNumber = useRef(1);
+	const [loading, setLoading] = useState(true);
+	const isFirstRender = useRef(true);
+
+	function initFetchProducts() {
+		const query = router.query;
+		console.log(query);
+		let queryString = "?";
+
+		Object.keys(query).map((key) => {
+			queryString += `${key}=${query[key]}&`;
+		});
+		console.log(queryString);
+
+		axios
+			.get<IGetProductsResponse>("/api/products" + queryString)
+			.then((res) => {
+				setProducts(res.data.currentProducts);
+				productsLength.current = res.data.productsLength;
+				setLoading(false);
+				pageNumber.current++;
+			})
+			.catch((err: AxiosError) => {
+				console.log(err);
+			});
+	}
 
 	function fetchProduct() {
+		const query = router.query;
+		let queryString = "?";
+
+		Object.keys(query).map((key) => {
+			queryString += `${key}=${query[key]}&`;
+		});
+
 		axios
 			.get<IGetProductsResponse>(
-				`/api/products?limit=12&page=${pageNumber.current}`
+				`/api/products` + queryString + `page=${pageNumber.current}`
 			)
 			.then((res) => {
 				setProducts([...products, ...res.data.currentProducts]);
@@ -50,8 +70,9 @@ const Home: NextPage<Props> = ({ data }) => {
 	}
 
 	function sort(e: ChangeEvent<HTMLSelectElement>) {
+		location.href = `?limit=12&sort=${e.currentTarget.value}`;
+
 		setsortType(e.currentTarget.value);
-		router.push(`/?limit=12&sort=${e.currentTarget.value}`);
 	}
 
 	const handleScroll = async () => {
@@ -64,12 +85,18 @@ const Home: NextPage<Props> = ({ data }) => {
 	};
 
 	useEffect(() => {
+		if (pageNumber.current === 1) return;
 		if (loading) {
 			fetchProduct();
 		}
 	}, [loading]);
 
 	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		initFetchProducts();
 		window.addEventListener("scroll", handleScroll);
 
 		return () => window.removeEventListener("scroll", handleScroll);
