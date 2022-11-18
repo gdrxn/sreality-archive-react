@@ -4,34 +4,35 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { IGetProductsResponse, IRealEstate } from "../types";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
 
 import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import RealEstateCard from "../components/RealEstateCard";
 import Loader from "../components/Loader";
+import { ParsedUrlQuery } from "querystring";
 
-const Home: NextPage = () => {
+type Props = {
+	query: ParsedUrlQuery;
+};
+const Home: NextPage<Props> = ({ query }) => {
 	const router = useRouter();
 
 	const [sortType, setsortType] = useState(router.query.sort || "date-desc");
 	const [products, setProducts] = useState([] as IRealEstate[]);
 	const productsLength = useRef(0);
 
-	const limit = useRef(router.query.limit || 12);
 	const pageNumber = useRef(1);
 	const [loading, setLoading] = useState(true);
 	const isFirstRender = useRef(true);
 
+	const limit = useRef(router.query.limit || 12);
+
 	function initFetchProducts() {
-		const query = router.query;
-		console.log(query);
 		let queryString = "?";
 
 		Object.keys(query).map((key) => {
 			queryString += `${key}=${query[key]}&`;
 		});
-		console.log(queryString);
 
 		axios
 			.get<IGetProductsResponse>("/api/products" + queryString)
@@ -70,7 +71,7 @@ const Home: NextPage = () => {
 	}
 
 	function sort(e: ChangeEvent<HTMLSelectElement>) {
-		location.href = `?limit=12&sort=${e.currentTarget.value}`;
+		location.href = `?sort=${e.currentTarget.value}`;
 
 		setsortType(e.currentTarget.value);
 	}
@@ -96,7 +97,9 @@ const Home: NextPage = () => {
 			isFirstRender.current = false;
 			return;
 		}
+
 		initFetchProducts();
+
 		window.addEventListener("scroll", handleScroll);
 
 		return () => window.removeEventListener("scroll", handleScroll);
@@ -132,6 +135,12 @@ const Home: NextPage = () => {
 			</main>
 		</div>
 	);
+};
+
+Home.getInitialProps = async (req) => {
+	const query = req.query;
+
+	return { query };
 };
 
 export default Home;
