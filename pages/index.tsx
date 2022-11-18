@@ -9,6 +9,7 @@ import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import RealEstateCard from "../components/RealEstateCard";
 import Loader from "../components/Loader";
+import Miniloader from "../components/Miniloader";
 import { ParsedUrlQuery } from "querystring";
 
 type Props = {
@@ -22,7 +23,8 @@ const Home: NextPage<Props> = ({ query }) => {
 	const productsLength = useRef(0);
 
 	const pageNumber = useRef(1);
-	const [loading, setLoading] = useState(true);
+	const [pageLoading, setpageLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const isFirstRender = useRef(true);
 
 	const limit = useRef(router.query.limit || 12);
@@ -39,7 +41,7 @@ const Home: NextPage<Props> = ({ query }) => {
 			.then((res) => {
 				setProducts(res.data.currentProducts);
 				productsLength.current = res.data.productsLength;
-				setLoading(false);
+				setpageLoading(false);
 				pageNumber.current++;
 			})
 			.catch((err: AxiosError) => {
@@ -106,7 +108,7 @@ const Home: NextPage<Props> = ({ query }) => {
 	}, []);
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col min-h-screen">
 			<Head>
 				<title>Create Next App</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -114,24 +116,30 @@ const Home: NextPage<Props> = ({ query }) => {
 
 			<Navbar />
 
-			<main className="flex flex-col">
-				<select
-					className="self-end focus:outline-none  px-2 py-1.5 rounded-lg shadow-md border border-gray-100 mt-6 mr-4"
-					value={sortType}
-					onChange={sort}
-				>
-					<option value="date-asc">Date ascending</option>
-					<option value="date-desc">Date descending</option>
-					<option value="price-asc">Price ascending</option>
-					<option value="price-desc">Price descending</option>
-				</select>
+			<main className="flex flex-col flex-1">
+				{pageLoading ? (
+					<Loader />
+				) : (
+					<>
+						<select
+							className="self-end focus:outline-none  px-2 py-1.5 rounded-lg shadow-md border border-gray-100 mt-6 mr-4"
+							value={sortType}
+							onChange={sort}
+						>
+							<option value="date-asc">Date ascending</option>
+							<option value="date-desc">Date descending</option>
+							<option value="price-asc">Price ascending</option>
+							<option value="price-desc">Price descending</option>
+						</select>
 
-				<ul className="mt-9 mx-auto flex flex-wrap gap-5 justify-center">
-					{products.map((product) => (
-						<RealEstateCard key={product._id} product={product} />
-					))}
-				</ul>
-				{loading && <Loader />}
+						<ul className="mt-9 mx-auto flex flex-wrap gap-5 justify-center">
+							{products.map((product) => (
+								<RealEstateCard key={product._id} product={product} />
+							))}
+						</ul>
+						{loading && <Miniloader />}
+					</>
+				)}
 			</main>
 		</div>
 	);
