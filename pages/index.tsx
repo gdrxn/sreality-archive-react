@@ -110,35 +110,35 @@ const Home: NextPage<Props> = ({ query }) => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<Head>
-				<title>Create Next App</title>
+				<title>Home</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<Navbar />
 
-			<main className="flex flex-col flex-1">
+			<main className="flex flex-col flex-1 items-center">
 				{pageLoading ? (
 					<Loader />
 				) : (
-					<>
+					<div className="flex flex-col items-center">
 						<select
-							className="self-end focus:outline-none  px-2 py-1.5 rounded-lg shadow-md border border-gray-100 mt-6 mr-4"
+							className="xl:self-end mt-7 px-5 py-1.5 cursor-pointer shadow-md rounded-xl border border-gray-100 focus:outline-none font-medium"
 							value={sortType}
 							onChange={sort}
 						>
-							<option value="date-asc">Date ascending</option>
-							<option value="date-desc">Date descending</option>
-							<option value="price-asc">Price ascending</option>
-							<option value="price-desc">Price descending</option>
+							<option value="date-asc">Oldest</option>
+							<option value="date-desc">Newest</option>
+							<option value="price-asc">Lowest</option>
+							<option value="price-desc">Highest</option>
 						</select>
 
-						<ul className="mt-9 mx-auto flex flex-wrap gap-5 justify-center">
+						<ul className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
 							{products.map((product) => (
 								<RealEstateCard key={product._id} product={product} />
 							))}
 						</ul>
 						{loading && <Miniloader />}
-					</>
+					</div>
 				)}
 			</main>
 		</div>
