@@ -98,3 +98,20 @@ export interface ISessionUser {
 	firstName: string;
 	lastName: string;
 }
+
+export interface IFullInfo {
+	name: string;
+	location: string;
+	url: string;
+	price: number;
+	priceHistory: number[];
+	description: string;
+	parameters: string;
+	images: string[];
+	type: HouseOrApartment;
+}
+
+export interface ILatestListings {
+	updatedListings: IRealEstate[];
+	newListings: IRealEstate[];
+}
