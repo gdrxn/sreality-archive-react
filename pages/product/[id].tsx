@@ -23,7 +23,6 @@ type Props = {
 };
 
 const Product: NextPage<Props> = (props) => {
-	const router = useRouter();
 	const [product, setproduct] = useState(null as null | IRealEstate);
 
 	function fetchProduct() {
@@ -40,6 +39,10 @@ const Product: NextPage<Props> = (props) => {
 	useEffect(() => {
 		fetchProduct();
 	}, []);
+
+	const cols =
+		product?.parameters &&
+		Math.ceil(product?.parameters.split(" | ")?.length / 8);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -69,10 +72,31 @@ const Product: NextPage<Props> = (props) => {
 						</SwiperSlide>
 					))}
 				</Swiper>
-
 				<h1 className="mt-10 text-2xl">{product?.name}</h1>
 				<h2 className="mt-1 text-xl">{product?.location}</h2>
+				<h2 className="mt-1 text-xl">
+					{`${product?.price.toLocaleString("cs-CZ")} Kč`}
+				</h2>
 				<p className="mt-6 mb-10">{product?.description}</p>
+				{cols && (
+					<table className="xl:flex mb-8 xl:space-x-8 flex-1">
+						{[...Array(cols)].map((col, i) => {
+							return (
+								<tbody className="flex-1">
+									{product.parameters
+										.split(" | ")
+										.slice(8 * i, (i + 1) * 8)
+										.map((param) => (
+											<tr className="flex justify-between">
+												<td>{param.split(":")[0]}:</td>
+												<td>{param.split(":")[1]}</td>
+											</tr>
+										))}
+								</tbody>
+							);
+						})}
+					</table>
+				)}
 			</main>
 		</div>
 	);

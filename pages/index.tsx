@@ -116,7 +116,7 @@ const Home: NextPage<Props> = ({ query }) => {
 
 			<Navbar />
 
-			<main className="flex flex-col flex-1 items-center">
+			<main className="mt-11 flex flex-col flex-1 items-center">
 				{pageLoading ? (
 					<Loader />
 				) : (
@@ -126,10 +126,10 @@ const Home: NextPage<Props> = ({ query }) => {
 							value={sortType}
 							onChange={sort}
 						>
-							<option value="date-asc">Oldest</option>
-							<option value="date-desc">Newest</option>
-							<option value="price-asc">Lowest</option>
-							<option value="price-desc">Highest</option>
+							<option value="date-desc">Newest listings</option>
+							<option value="date-asc">Oldest listings</option>
+							<option value="price-asc">Lowest price</option>
+							<option value="price-desc">Highest price</option>
 						</select>
 
 						<ul className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
