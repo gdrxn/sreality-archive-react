@@ -10,7 +10,7 @@ const feed = () => {
 
 	function fetchFeed() {
 		axios
-			.get<ILatestListings>(`${process.env.NEXT_PUBLIC_SERVER_URI}/feed`)
+			.get<ILatestListings>(`${process.env.NEXT_PUBLIC_MONITOR_API}/feed`)
 			.then((res) => {
 				setlatestFeed(res.data);
 			})

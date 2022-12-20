@@ -25,7 +25,6 @@ const Home: NextPage<Props> = ({ query }) => {
 	const pageNumber = useRef(1);
 	const [pageLoading, setpageLoading] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const isFirstRender = useRef(true);
 
 	const limit = useRef(router.query.limit || 12);
 
@@ -95,11 +94,6 @@ const Home: NextPage<Props> = ({ query }) => {
 	}, [loading]);
 
 	useEffect(() => {
-		if (isFirstRender.current) {
-			isFirstRender.current = false;
-			return;
-		}
-
 		initFetchProducts();
 
 		window.addEventListener("scroll", handleScroll);
